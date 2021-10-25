@@ -99,14 +99,6 @@ class ResultViewController: UIViewController {
                                  y: view.safeAreaInsets.top+100,
                                  width: widthSize,
                                  height: widthSize)
-        let constraint1 = NSLayoutConstraint(item: imageView,
-                                             attribute: .centerX,
-                                             relatedBy: .equal,
-                                             toItem: view,
-                                             attribute: .centerX,
-                                             multiplier: 1.0,
-                                             constant: 0.0)
-        view.addConstraint(constraint1)
         
         titleLabel.frame = CGRect(x: widthSize-widthSize/2.0,
                                   y: view.safeAreaInsets.top+widthSize+130,

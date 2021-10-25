@@ -9,7 +9,7 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    var data: [[String: Any]]=[]
+    public var datas: [[String: Any]]=[]
     
     var task: URLSessionTask?
     var word: String!
@@ -23,8 +23,17 @@ class ViewController: UIViewController {
     
     private let tableView: UITableView = {
         let tableView = UITableView()
-        tableView.register(ResultTableViewCell.self, forCellReuseIdentifier: ResultTableViewCell.identifier)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         return tableView
+    }()
+    
+    let label: UILabel = {
+       let label = UILabel()
+        label.text = "Title"
+        label.tintColor = .secondaryLabel
+        label.textAlignment = .left
+        label.font = .systemFont(ofSize: 18, weight: .semibold)
+        return label
     }()
 
     public override func viewDidLoad() {
@@ -46,18 +55,12 @@ class ViewController: UIViewController {
         
         
     }
-
-    
 }
 
 //MARK: - searchBar
 
 extension ViewController: UISearchBarDelegate {
     
-    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-        
-        return true
-    }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         task?.cancel()
@@ -72,7 +75,7 @@ extension ViewController: UISearchBarDelegate {
             task = URLSession.shared.dataTask(with: URL(string: url)!) { (data, res, err) in
                 if let obj = try! JSONSerialization.jsonObject(with: data!) as? [String: Any] {
                     if let items = obj["items"] as? [[String: Any]] {
-                    self.data = items
+                    self.datas = items
                         DispatchQueue.main.async {
                             self.tableView.reloadData()
                         }
@@ -89,11 +92,15 @@ extension ViewController: UISearchBarDelegate {
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return datas.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ResultTableViewCell.identifier, for: indexPath) as! ResultTableViewCell
+        let cell = UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: "cell")
+        let data = datas[indexPath.row]
+        cell.textLabel?.text = data["full_name"] as? String ?? ""
+        cell.detailTextLabel?.text = data["language"] as? String ?? ""
+        cell.tag = indexPath.row
         
         return cell
     }
