@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ResultViewViewController: UIViewController {
+class ResultViewController: UIViewController {
     
     let vc = ViewController()
     

@@ -23,7 +23,7 @@ class ViewController: UIViewController {
     
     private let tableView: UITableView = {
         let tableView = UITableView()
-        
+        tableView.register(ResultTableViewCell.self, forCellReuseIdentifier: ResultTableViewCell.identifier)
         return tableView
     }()
 
@@ -93,13 +93,15 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        let cell = tableView.dequeueReusableCell(withIdentifier: ResultTableViewCell.identifier, for: indexPath) as! ResultTableViewCell
+        
+        return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let vc = ResultViewViewController()
+        let vc = ResultViewController()
         vc.navigationItem.largeTitleDisplayMode = .never
         vc.navigationItem.title = "Result"
         navigationController?.pushViewController(vc, animated: true)
