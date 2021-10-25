@@ -10,6 +10,7 @@ import UIKit
 class ViewController: UIViewController {
     
     public var datas: [[String: Any]]=[]
+    //var indexPathRow: Int!
     
     var task: URLSessionTask?
     var word: String!
@@ -111,6 +112,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         let vc = ResultViewController()
         vc.navigationItem.largeTitleDisplayMode = .never
         vc.navigationItem.title = "Result"
+        vc.rowNum = indexPath.row
+        let data = datas[indexPath.row]
+        vc.data = data
         navigationController?.pushViewController(vc, animated: true)
     }
 }

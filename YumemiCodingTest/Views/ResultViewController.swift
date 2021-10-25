@@ -10,10 +10,11 @@ import UIKit
 class ResultViewController: UIViewController {
     
     let vc = ViewController()
+    var rowNum: Int!
+    var data: [String: Any]? = nil
     
     let imageView: UIImageView = {
        let imageView = UIImageView()
-        imageView.backgroundColor = .red
         
         return imageView
     }()
@@ -21,15 +22,17 @@ class ResultViewController: UIViewController {
     let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Title"
+        label.numberOfLines = 2
         label.tintColor = .secondaryLabel
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: 30, weight: .semibold)
+        label.font = .systemFont(ofSize: 25, weight: .bold)
         return label
     }()
     
     let languageLabel: UILabel = {
         let label = UILabel()
         label.text = "languageLabel"
+        label.numberOfLines = 2
         label.tintColor = .secondaryLabel
         label.textAlignment = .left
         label.font = .systemFont(ofSize: 20, weight: .semibold)
@@ -76,10 +79,36 @@ class ResultViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = .systemBackground
         
+        getText()
+        getImage()
         addSubviews()
+    }
+    
+    private func getText() {
+        let data = data!
+        languageLabel.text = "Written in \(data["language"] as? String ?? "")"
+        starsLabel.text = "\(data["stargazers_count"] as? Int ?? 0) stars"
+        watchersLabel.text = "\(data["wachers_count"] as? Int ?? 0) watchers"
+        forksLabel.text = "\(data["forks_count"] as? Int ?? 0) forks"
+        issuesLabel.text = "\(data["open_issues_count"] as? Int ?? 0) open issues"
+    }
+    
+    private func getImage() {
+        let data = data!
+        titleLabel.text = data["full_name"] as? String
+        
+        if let owner = data["owner"] as? [String: Any] {
+            if let imgURL = owner["avatar_url"] as? String {
+                URLSession.shared.dataTask(with: URL(string: imgURL)!) { (data, res, err) in
+                    let img = UIImage(data: data!)!
+                    DispatchQueue.main.async {
+                        self.imageView.image = img
+                    }
+                }.resume()
+            }
+        }
     }
     
     private func addSubviews() {
@@ -100,10 +129,10 @@ class ResultViewController: UIViewController {
                                  width: widthSize,
                                  height: widthSize)
         
-        titleLabel.frame = CGRect(x: widthSize-widthSize/2.0,
+        titleLabel.frame = CGRect(x: 0,
                                   y: view.safeAreaInsets.top+widthSize+130,
-                                  width: widthSize,
-                                  height: 30)
+                                  width: view.frame.size.width,
+                                  height: 60)
         
         languageLabel.frame = CGRect(x: 20,
                                      y: view.safeAreaInsets.top+widthSize+200,
@@ -130,9 +159,4 @@ class ResultViewController: UIViewController {
                                   width: widthSize-10,
                                   height: 30)
     }
-    
-   
-    
-
-
 }
