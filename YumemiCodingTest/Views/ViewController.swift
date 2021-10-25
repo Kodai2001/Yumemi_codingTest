@@ -25,6 +25,7 @@ class ViewController: UIViewController {
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.keyboardDismissMode = .onDrag
         return tableView
     }()
     
@@ -70,7 +71,7 @@ extension ViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
         word = searchBar.text
-        
+        searchBar.resignFirstResponder()
         if word.count != 0 {
             url = "https://api.github.com/search/repositories?q=\(word!)"
             task = URLSession.shared.dataTask(with: URL(string: url)!) { (data, res, err) in
