@@ -113,7 +113,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         
         // ResultVCに値を渡す
         vc.indexPathRow = indexPath.row
-        vc.data = data
+        vc.datas = data
         navigationController?.pushViewController(vc, animated: true)
     }
 }

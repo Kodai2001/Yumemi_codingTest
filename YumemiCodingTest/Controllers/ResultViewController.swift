@@ -11,7 +11,7 @@ class ResultViewController: UIViewController {
     
     let vc = ViewController()
     var indexPathRow: Int!
-    var data: [String: Any]? = nil
+    var datas: [String: Any]? = [:]
     
     let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -88,7 +88,7 @@ class ResultViewController: UIViewController {
     
     // ラベルのテキスト内容を取得する
     private func getText() {
-        let data = data!
+        let data = datas!
         languageLabel.text = "Written in \(data["language"] as? String ?? "")"
         starsLabel.text = "\(data["stargazers_count"] as? Int ?? 0) stars"
         watchersLabel.text = "\(data["wachers_count"] as? Int ?? 0) watchers"
@@ -98,7 +98,9 @@ class ResultViewController: UIViewController {
     
     // imageViewを取得する
     private func getImage() {
-        let data = data!
+        guard let data = datas else {
+            return
+        }
         titleLabel.text = data["full_name"] as? String
         
         if let owner = data["owner"] as? [String: Any] {
@@ -139,7 +141,7 @@ class ResultViewController: UIViewController {
         languageLabel.frame = CGRect(x: 20,
                                      y: view.safeAreaInsets.top+widthSize+200,
                                      width: widthSize,
-                                     height: 30)
+                                     height: 60)
         
         starsLabel.frame = CGRect(x: widthSize,
                                   y: view.safeAreaInsets.top+widthSize+200,
