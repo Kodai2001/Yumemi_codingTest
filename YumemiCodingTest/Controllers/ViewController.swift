@@ -10,14 +10,13 @@ import UIKit
 class ViewController: UIViewController {
     
     public var datas: [[String: Any]]=[]
-    //var indexPathRow: Int!
+    
     
     var task: URLSessionTask?
-    var word: String!
-    var url: String!
-    
+    var textUserInput: String?
+    var url: String?
     private let searchBar: UISearchBar = {
-       let searchBar = UISearchBar()
+        let searchBar = UISearchBar()
         searchBar.backgroundColor = .secondarySystemBackground
         return searchBar
     }()
@@ -29,15 +28,6 @@ class ViewController: UIViewController {
         return tableView
     }()
     
-    let label: UILabel = {
-       let label = UILabel()
-        label.text = "Title"
-        label.tintColor = .secondaryLabel
-        label.textAlignment = .left
-        label.font = .systemFont(ofSize: 18, weight: .semibold)
-        return label
-    }()
-
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(searchBar)
@@ -54,8 +44,6 @@ class ViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         tableView.frame = view.bounds
-        
-        
     }
 }
 
@@ -70,22 +58,28 @@ extension ViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
-        word = searchBar.text
+        textUserInput = searchBar.text
         searchBar.resignFirstResponder()
-        if word.count != 0 {
-            url = "https://api.github.com/search/repositories?q=\(word!)"
+        guard let textUserInput = textUserInput else {
+            return
+        }
+        if textUserInput.count != 0 {
+            url = "https://api.github.com/search/repositories?q=\(textUserInput)"
+            guard let url = url else {
+                return
+            }
             task = URLSession.shared.dataTask(with: URL(string: url)!) { (data, res, err) in
                 if let obj = try! JSONSerialization.jsonObject(with: data!) as? [String: Any] {
                     if let items = obj["items"] as? [[String: Any]] {
-                    self.datas = items
+                        self.datas = items
                         DispatchQueue.main.async {
                             self.tableView.reloadData()
                         }
                     }
                 }
             }
-        // これ呼ばなきゃリストが更新されません
-        task?.resume()
+            // これ呼ばなきゃリストが更新されません
+            task?.resume()
         }
     }
 }
@@ -111,10 +105,14 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
         
         let vc = ResultViewController()
+        
         vc.navigationItem.largeTitleDisplayMode = .never
         vc.navigationItem.title = "Result"
-        vc.rowNum = indexPath.row
+        
         let data = datas[indexPath.row]
+        
+        // ResultVCに値を渡す
+        vc.indexPathRow = indexPath.row
         vc.data = data
         navigationController?.pushViewController(vc, animated: true)
     }

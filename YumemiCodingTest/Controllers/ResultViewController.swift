@@ -10,11 +10,11 @@ import UIKit
 class ResultViewController: UIViewController {
     
     let vc = ViewController()
-    var rowNum: Int!
+    var indexPathRow: Int!
     var data: [String: Any]? = nil
     
     let imageView: UIImageView = {
-       let imageView = UIImageView()
+        let imageView = UIImageView()
         
         return imageView
     }()
@@ -86,6 +86,7 @@ class ResultViewController: UIViewController {
         addSubviews()
     }
     
+    // ラベルのテキスト内容を取得する
     private func getText() {
         let data = data!
         languageLabel.text = "Written in \(data["language"] as? String ?? "")"
@@ -95,6 +96,7 @@ class ResultViewController: UIViewController {
         issuesLabel.text = "\(data["open_issues_count"] as? Int ?? 0) open issues"
     }
     
+    // imageViewを取得する
     private func getImage() {
         let data = data!
         titleLabel.text = data["full_name"] as? String
@@ -145,9 +147,9 @@ class ResultViewController: UIViewController {
                                   height: 30)
         
         watchersLabel.frame = CGRect(x: widthSize,
-                                  y: view.safeAreaInsets.top+widthSize+250,
-                                  width: widthSize-10,
-                                  height: 30)
+                                     y: view.safeAreaInsets.top+widthSize+250,
+                                     width: widthSize-10,
+                                     height: 30)
         
         forksLabel.frame = CGRect(x: widthSize,
                                   y: view.safeAreaInsets.top+widthSize+300,
@@ -155,8 +157,8 @@ class ResultViewController: UIViewController {
                                   height: 30)
         
         issuesLabel.frame = CGRect(x: widthSize,
-                                  y: view.safeAreaInsets.top+widthSize+350,
-                                  width: widthSize-10,
-                                  height: 30)
+                                   y: view.safeAreaInsets.top+widthSize+350,
+                                   width: widthSize-10,
+                                   height: 30)
     }
 }
